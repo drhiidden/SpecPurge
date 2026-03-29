@@ -1,0 +1,23 @@
+# Compiled class file
+*.class
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log
+logs/
+
+# Test reports
+test-reports/
+*.html
+
+# OS
+.DS_Store
