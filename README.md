@@ -52,7 +52,7 @@ java -jar specsurge.jar --spec http://api.com/v3/api-docs
 🎯 Coverage: 100% of endpoints
 ```
 
-**ROI: Infinite**
+**Saves hours of manual test writing**
 
 ---
 
@@ -373,7 +373,7 @@ Coverage: 100% of endpoints
 Cost: $0 (open source core)
 Maintenance: 0 (auto-sync with spec)
 
-ROI: ∞ (infinite)
+Result: 100% endpoint coverage in one run
 ```
 
 ### The Vision (v1.1+)
@@ -643,7 +643,7 @@ jobs:
       
       - name: Run API Tests
         run: |
-          java -jar FSJ-Agentic/target/*.jar \
+          java -jar SpecPurge/target/*.jar \
             --spec http://api:8082/v3/api-docs \
             --output ./reports
       
@@ -667,36 +667,9 @@ specsurge:
     - java -jar target/*.jar --spec $API_URL/v3/api-docs
   artifacts:
     paths:
-      - FSJ-Agentic/test-reports/*.html
+      - SpecPurge/test-reports/*.html
     expire_in: 7 days
 ```
-
----
-
-## Market Opportunity (2026)
-
-### Why Now?
-
-```
-2023: Manual API testing (Postman)
-2024: Contract testing (Pact, Dredd)
-2025: OpenAPI validation
-2026: AI-powered automatic testing ← SpecSurge
-```
-
-### Target Market
-
-- **3M+ Spring Boot companies** worldwide
-- **DevOps teams** needing fast regression
-- **Startups** with evolving APIs
-- **Enterprises** cutting SaaS costs
-
-### Competitive Moat
-
-1. **Open source core** → Viral adoption
-2. **AI-native design** → Future-proof for 2026
-3. **Java ecosystem** → Enterprise trust
-4. **Zero config** → Lowest friction to adoption
 
 ---
 
@@ -761,7 +734,7 @@ specsurge --spec file://openapi.yaml --base-url http://localhost
 
 ```bash
 # Download release
-wget https://github.com/drhiidden/FSJ-Agentic/releases/download/v1.0.0/specsurge-1.0.0.jar
+wget https://github.com/drhiidden/SpecPurge/releases/download/v1.0.0/specsurge-1.0.0.jar
 
 # Run
 java -jar specsurge-1.0.0.jar --spec <your-api-url>
@@ -802,35 +775,9 @@ A: Similar concept, but Java-native + AI-ready architecture. Better for Spring B
 
 ---
 
-## Success Metrics
-
-**SampleShop API Testing:**
-- ⚡ 248 endpoints tested in 15 seconds (vs 40 hours manually)
-- 🎯 100% API coverage (vs 30% manual)
-- 💰 $0 cost (vs $20K/year for Postman Enterprise)
-- 🤖 0 maintenance hours (vs 2h/week)
-- ✅ 0 server crashes detected (backend quality confirmed)
-
-**ROI:** Infinite (saves $20K/year, costs $0)
-
----
-
-## Testimonials
-
-> "SpecSurge discovered 15 endpoints we forgot to document. Saved us 120 hours in the first month."  
-> — **Lead Developer, SampleShop**
-
-> "Zero-config testing that actually works. We run it on every commit."  
-> — **DevOps Engineer** _(testimonial placeholder)_
-
-> "The AI payload generation is a game-changer for complex schemas."  
-> — **QA Lead, v1.1 Beta Tester** _(planned)_
-
----
-
 ## Get Involved
 
-- ⭐ **Star on GitHub:** `github.com/drhiidden/FSJ-Agentic`
+- ⭐ **Star on GitHub:** `github.com/drhiidden/SpecPurge`
 - 🐛 **Report bugs:** GitHub Issues
 - 💡 **Request features:** Discussions
 - 🤝 **Contribute:** PRs welcome
