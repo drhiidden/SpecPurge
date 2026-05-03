@@ -25,7 +25,9 @@ test-reports/
 # Internal AI workflow (never public)
 .cursor/
 .procontext/
-AGENTS.md
+
+# AGENTS.md is public — contributor and AI guide
+!AGENTS.md
 SPRINT-*.md
 SESSION-*.md
 *-COMPLETADO.md
