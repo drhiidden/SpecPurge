@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Detailed logging (SLF4J + Logback)
 
 ### Tested Against
-- **WikiRAP API**: 248 endpoints discovered
+- **SampleShop API**: 248 endpoints discovered
 - **Success Rate**: 71% (176/248 passed)
 - **Execution Time**: ~15 seconds
 - **Report Size**: 89KB HTML
@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### v1.1 - AI Integration (Planned)
 - [ ] OpenAI/Claude payload generation for complex schemas
 - [ ] Business rule inference from descriptions
-- [ ] Realistic test data (artist names, real emails)
+- [ ] Realistic test data (product names, real emails)
 - [ ] Smart validation error interpretation
 
 ### v1.2 - Advanced Features (Planned)

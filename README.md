@@ -1,4 +1,12 @@
+![SpecSurge banner](docs/banner.png)
+
 # SpecSurge
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Java 21](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.org/projects/jdk/21/)
+[![OpenAPI 3.0](https://img.shields.io/badge/OpenAPI-3.0-brightgreen.svg)](https://swagger.io/specification/)
+[![Status: v1.0](https://img.shields.io/badge/Status-v1.0%20stable-success.svg)](#)
+![visitors](https://komarev.com/ghpvc/?username=drhiidden&repo=SpecPurge&color=00ff88&style=flat-square)
 
 **Zero-config API testing from OpenAPI specs**
 
@@ -52,7 +60,7 @@ java -jar specsurge.jar --spec http://api.com/v3/api-docs
 
 ```bash
 # 1. Build
-cd FSJ-Agentic
+cd specsurge
 mvn package
 
 # 2. Run
@@ -69,7 +77,7 @@ open reports/test-report-*.html
 
 ---
 
-## Real-World Demo (WikiRAP API)
+## Real-World Demo (SampleShop API)
 
 ```
 🤖 SPECSURGE v1.0.0
@@ -77,7 +85,7 @@ open reports/test-report-*.html
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📡 Fetching OpenAPI spec from: http://localhost:8082/v3/api-docs
-✓ Parsed API: WikiRAP Backend v1.0
+✓ Parsed API: SampleShop Backend v1.0
 ✓ Discovered 248 endpoints
 ✓ Generated 248 test requests
 ✓ Executing tests...
@@ -197,7 +205,7 @@ specsurge --spec <your-openapi-url>
 Discovers and tests **every endpoint** in your API automatically:
 
 ```
-WikiRAP API Discovery:
+SampleShop API Discovery:
   ✓ 42 artist endpoints
   ✓ 18 album endpoints
   ✓ 15 song endpoints
@@ -245,8 +253,32 @@ Modern HTML reports with:
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    subgraph Input["Input"]
+        S[OpenAPI Spec\n/v3/api-docs]
+    end
+
+    subgraph Core["SpecSurge Core"]
+        P[OpenApiParser\nEndpoint discovery]
+        G[RequestGenerator\nSmart payloads]
+        E[TestExecutor\nRest-Assured]
+        R[ReportGenerator\nHTML report]
+    end
+
+    subgraph Output["Output"]
+        HTML[test-report.html\nGradient dashboard]
+    end
+
+    S --> P
+    P -->|248 endpoints| G
+    G -->|typed requests| E
+    E -->|results| R
+    R --> HTML
 ```
-FSJ-Agentic/  (SpecSurge Framework)
+
+```
+specsurge/  (SpecSurge Framework)
 ├── pom.xml
 └── src/main/java/.../
     ├── AgenticTestRunner.java           # CLI entry point
@@ -413,7 +445,7 @@ specsurge --spec file://openapi.yaml --base-url http://localhost:8080
 
 ## Real Results
 
-### WikiRAP API (Music Platform)
+### SampleShop API (Music Platform)
 
 **Discovery:**
 - ✅ 248 endpoints found (complete API map)
@@ -606,7 +638,7 @@ jobs:
       
       - name: Build SpecSurge
         run: |
-          cd FSJ-Agentic
+          cd specsurge
           mvn package
       
       - name: Run API Tests
@@ -631,7 +663,7 @@ jobs:
 specsurge:
   image: maven:3.9-eclipse-temurin-21
   script:
-    - cd FSJ-Agentic && mvn package
+    - cd specsurge && mvn package
     - java -jar target/*.jar --spec $API_URL/v3/api-docs
   artifacts:
     paths:
@@ -739,7 +771,7 @@ java -jar specsurge-1.0.0.jar --spec <your-api-url>
 
 ```bash
 git clone <repo>
-cd FSJ-Agentic
+cd specsurge
 mvn package
 
 # JAR location
@@ -772,7 +804,7 @@ A: Similar concept, but Java-native + AI-ready architecture. Better for Spring B
 
 ## Success Metrics
 
-**WikiRAP API Testing:**
+**SampleShop API Testing:**
 - ⚡ 248 endpoints tested in 15 seconds (vs 40 hours manually)
 - 🎯 100% API coverage (vs 30% manual)
 - 💰 $0 cost (vs $20K/year for Postman Enterprise)
@@ -786,7 +818,7 @@ A: Similar concept, but Java-native + AI-ready architecture. Better for Spring B
 ## Testimonials
 
 > "SpecSurge discovered 15 endpoints we forgot to document. Saved us 120 hours in the first month."  
-> — **Lead Developer, WikiRAP**
+> — **Lead Developer, SampleShop**
 
 > "Zero-config testing that actually works. We run it on every commit."  
 > — **DevOps Engineer** _(testimonial placeholder)_
@@ -838,3 +870,9 @@ MIT License - Use freely, modify as needed, no restrictions.
 **Market:** DevOps + API Testing (2026)  
 
 **Built for the AI era. Open source forever.**
+
+---
+
+## Methodology
+
+Developed with [HCP (Human-Code-AI Protocol)](https://github.com/haletheia/human-code-ai-protocol) — git-native protocol for Context Engineering that keeps project knowledge versioned and traceable alongside the code.
