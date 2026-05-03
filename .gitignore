@@ -21,3 +21,17 @@ test-reports/
 
 # OS
 .DS_Store
+
+# Internal AI workflow (never public)
+.cursor/
+.procontext/
+AGENTS.md
+SPRINT-*.md
+SESSION-*.md
+*-COMPLETADO.md
+TASK_COMPLETION*.md
+
+# Secrets
+.env
+.env.*
+!.env.example

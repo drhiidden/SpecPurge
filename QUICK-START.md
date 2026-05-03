@@ -8,13 +8,13 @@
 
 ```bash
 # 1. Navigate to framework
-cd FSJ-Agentic
+cd specsurge
 
 # 2. Build JAR (requires Java 21+ and Maven 3.9+)
 mvn package
 
 # 3. Ensure your API is running
-# Example: WikiRAP backend at http://localhost:8082
+# Example: SampleShop backend at http://localhost:8082
 
 # 4. Run SpecSurge
 java -jar target/openapi-test-generator-1.0.0.jar
@@ -31,7 +31,7 @@ open test-reports/test-report-*.html
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📡 Fetching OpenAPI spec from: http://localhost:8082/v3/api-docs
-✓ Parsed API: WikiRAP Backend v1.0
+✓ Parsed API: SampleShop Backend v1.0
 ✓ Discovered 248 endpoints
 ✓ Generated 248 test requests
 ✓ Executing tests...
@@ -112,7 +112,7 @@ Actual: 400     → ❌ FAIL (bad request, check payload)
 ```
 🤖 SPECSURGE API TEST REPORT
 
-API: WikiRAP Backend v1.0
+API: SampleShop Backend v1.0
 Tested: 248 endpoints
 Duration: 15.2s
 Generated: 2026-03-29 05:05:16
@@ -239,7 +239,7 @@ jobs:
       
       - name: Build SpecSurge
         run: |
-          cd FSJ-Agentic
+          cd specsurge
           mvn package
       
       - name: Run Tests
@@ -261,7 +261,7 @@ jobs:
 specsurge:
   image: maven:3.9-eclipse-temurin-21
   script:
-    - cd FSJ-Agentic && mvn package
+    - cd specsurge && mvn package
     - java -jar target/*.jar --spec $API_URL/v3/api-docs
   artifacts:
     paths:
@@ -286,7 +286,7 @@ specsurge --spec api.com/docs \
 ```java
 // v1.1 - Test only specific tags
 specsurge --spec api.com/docs \
-          --tags artists,albums
+          --tags products,orders
 ```
 
 ### Performance Thresholds
@@ -336,7 +336,7 @@ specsurge --spec api.com/docs \
 
 ```bash
 # Clone
-cd FSJ-Agentic
+cd specsurge
 
 # Build
 mvn package
