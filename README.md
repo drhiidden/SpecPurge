@@ -6,7 +6,7 @@
 [![Java 21](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.org/projects/jdk/21/)
 [![OpenAPI 3.0](https://img.shields.io/badge/OpenAPI-3.0-brightgreen.svg)](https://swagger.io/specification/)
 [![Status: v1.0](https://img.shields.io/badge/Status-v1.0%20stable-success.svg)](#)
-![visitors](https://komarev.com/ghpvc/?username=drhiidden&repo=SpecPurge&color=00ff88&style=flat-square)
+[![views](https://komarev.com/ghpvc/?username=lab-specpurge&label=views&color=0e75b6)](https://github.com/drhiidden/SpecPurge)
 
 **Zero-config API testing from OpenAPI specs**
 
