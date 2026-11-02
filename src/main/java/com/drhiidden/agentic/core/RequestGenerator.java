@@ -26,12 +26,27 @@ public class RequestGenerator {
     
     private final ApiSpec spec;
     private final Random random = new Random();
+    /** Si true, las peticiones llevan el esquema de respuesta para validarlo. */
+    private boolean validateSchema;
+    
+    public RequestGenerator withSchemaValidation(boolean enabled) {
+        this.validateSchema = enabled;
+        return this;
+    }
     
     public List<TestRequest> generateAllRequests() {
+        return generateAllRequests(false);
+    }
+    
+    /**
+     * @param includeProtected si true, incluye también endpoints con 'security' (requiere token para ser útil)
+     */
+    public List<TestRequest> generateAllRequests(boolean includeProtected) {
         List<TestRequest> requests = new ArrayList<>();
         
-        // Solo endpoints públicos para v1.0
-        for (EndpointInfo endpoint : spec.getPublicEndpoints()) {
+        // v1.0: solo públicos; con includeProtected se prueban todos los seleccionados
+        List<EndpointInfo> candidates = includeProtected ? spec.getEndpoints() : spec.getPublicEndpoints();
+        for (EndpointInfo endpoint : candidates) {
             try {
                 TestRequest request = generateRequest(endpoint);
                 requests.add(request);
@@ -70,6 +85,9 @@ public class RequestGenerator {
             .body(body)
             .expectedStatusCode(expectedStatus)
             .requiresAuth(endpoint.isRequiresAuth())
+            .name(endpoint.getOperationId())
+            .responseSchema(endpoint.getResponseSchema())
+            .validateSchema(validateSchema)
             .build();
     }
     

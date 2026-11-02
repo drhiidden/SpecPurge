@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- **Cases mode** (`--cases FILE.yml`): declarative requests with JsonPath assertions, `${var}`/`${env:X}` interpolation; unresolved cases are skipped and listed. See `docs/cases.md`.
+- **Schema validation** (`--validate-schema`): 2xx responses checked against the OpenAPI response schema.
+- **Differential mode** (`--compare-base-url`, `--fail-on-diff`): same requests against a baseline, differences listed per JSON path.
+- **Auth**: `--bearer-env VAR` (env only, masked in reports), JWT `exp` check (expired token aborts), `--fail-on-auth`.
+- **Safety**: `--read-only`, `--allow-writes`, `--allow-host`, `--max-requests`, `--delay-ms`; credentials without `--read-only` are rejected.
+- **Selection**: `--include-protected`, `--include REGEX`, `--param K=V`; `--spec` accepts local files.
+- **Reports**: failure details with a reproducible `curl`, HTML escaping, `--format html,junit,json`.
+- **Strictness**: `--strict` (404 no longer passes in generated mode).
+- Unit and integration tests (JDK HttpServer) and `maven-surefire-plugin`.
+
+### Fixed
+- Global `security` of the OpenAPI document is now inherited by operations (previously every operation without its own `security` was treated as public); `security: []` makes an operation public.
+- Null query parameters are no longer sent; unknown CLI options fail fast; docs reference the real JAR name (`specsurge-core`).
+
+### Changed
+- Remote hosts require `--allow-host` when a token or write methods are used (localhost is always allowed).
+
+---
+
 ## [1.0.0] - 2026-03-29
 
 ### 🎉 Market Launch - SpecSurge

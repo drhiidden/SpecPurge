@@ -32,7 +32,7 @@ Guía para agentes IA y el propio autor trabajando en futuras versiones.
 
 **Package base**: `com.drhiidden.agentic`  
 **Main class**: `com.drhiidden.agentic.AgenticTestRunner`  
-**JAR output**: `target/openapi-test-generator-{version}.jar`
+**JAR output**: `target/specsurge-core-{version}.jar`
 
 ---
 
@@ -139,7 +139,7 @@ En v1.1 esto lo mejora un LLM — el generador actual es intencional por simplic
 mvn clean package
 
 # 3. Verificar el JAR funciona
-java -jar target/openapi-test-generator-1.1.0.jar --help
+java -jar target/specsurge-core-1.1.0.jar --help
 
 # 4. Tag + push
 git tag v1.1.0
@@ -147,7 +147,7 @@ git push origin v1.1.0
 
 # 5. GitHub Release con el JAR adjunto
 gh release create v1.1.0 \
-  target/openapi-test-generator-1.1.0.jar \
+  target/specsurge-core-1.1.0.jar \
   --title "SpecSurge v1.1.0 — AI Payloads + JWT Auth" \
   --notes "..."
 ```

@@ -33,6 +33,10 @@ public class ReportGenerator {
     }
     
     public Path generateHtmlReport(List<TestResult> results, String outputDir) throws IOException {
+        return generateHtmlReport(results, outputDir, Map.of());
+    }
+    
+    public Path generateHtmlReport(List<TestResult> results, String outputDir, Map<String, String> meta) throws IOException {
         Path outputPath = Paths.get(outputDir);
         Files.createDirectories(outputPath);
         
@@ -40,6 +44,7 @@ public class ReportGenerator {
         Path reportFile = outputPath.resolve("test-report-" + timestamp + ".html");
         
         Map<String, Object> data = buildReportData(results);
+        data.put("meta", meta);
         
         String html = renderHtmlReport(data);
         
@@ -54,7 +59,7 @@ public class ReportGenerator {
         
         long passed = results.stream().filter(TestResult::isPassed).count();
         long failed = results.size() - passed;
-        double successRate = (double) passed / results.size() * 100;
+        double successRate = results.isEmpty() ? 0 : (double) passed / results.size() * 100;
         
         data.put("totalTests", results.size());
         data.put("passed", passed);
@@ -92,6 +97,7 @@ public class ReportGenerator {
         return data;
     }
     
+    @SuppressWarnings("unchecked")
     private String renderHtmlReport(Map<String, Object> data) {
         // Generate HTML inline (sin FreeMarker template file por simplicidad)
         StringBuilder html = new StringBuilder();
@@ -241,6 +247,7 @@ public class ReportGenerator {
                     <div class="header">
                         <h1>🤖 Agentic API Test Report</h1>
                         <div class="subtitle">Automatic test generation from OpenAPI specification</div>
+                        @@META@@
                     </div>
                     
                     <div class="stats">
@@ -297,24 +304,37 @@ public class ReportGenerator {
             String methodClass = result.getMethod().toLowerCase();
             String statusBadge = result.isPassed() ? "success" : "error";
             String statusText = result.isPassed() ? "PASS" : "FAIL";
+            String label = result.getName() != null && !result.getName().equals(result.getOperationId())
+                ? "<br><small>" + esc(result.getName()) + "</small>" : "";
             
-            html.append(String.format("""
-                                <tr>
-                                    <td><span class="method %s">%s</span></td>
-                                    <td><code>%s</code></td>
-                                    <td>%d</td>
-                                    <td>%d</td>
-                                    <td>%dms</td>
-                                    <td><span class="badge %s">%s</span></td>
-                                </tr>
-                """,
-                methodClass, result.getMethod(),
-                result.getPath(),
-                result.getActualStatus(),
-                result.getExpectedStatus(),
-                result.getDuration().toMillis(),
-                statusBadge, statusText
-            ));
+            html.append("<tr><td><span class=\"method ").append(esc(methodClass)).append("\">").append(esc(result.getMethod())).append("</span></td>")
+                .append("<td><code>").append(esc(result.getPath())).append("</code>").append(label).append("</td>")
+                .append("<td>").append(result.getActualStatus()).append("</td>")
+                .append("<td>").append(result.getExpectedStatus()).append("</td>")
+                .append("<td>").append(result.getDuration().toMillis()).append("ms</td>")
+                .append("<td><span class=\"badge ").append(statusBadge).append("\">").append(statusText).append("</span></td></tr>\n");
+            
+            boolean hasDetails = !result.isPassed() || !result.getDiffs().isEmpty() || !result.getViolations().isEmpty();
+            if (hasDetails) {
+                html.append("<tr><td colspan=\"6\" style=\"background:#f7fafc;font-size:0.85rem\">");
+                if (result.getErrorMessage() != null) {
+                    html.append("<div><b>Error:</b> ").append(esc(result.getErrorMessage())).append("</div>");
+                }
+                if (!result.getViolations().isEmpty()) {
+                    html.append("<div><b>Violaciones:</b><ul>");
+                    result.getViolations().forEach(v -> html.append("<li>").append(esc(v)).append("</li>"));
+                    html.append("</ul></div>");
+                }
+                if (!result.getDiffs().isEmpty()) {
+                    html.append("<div><b>Diferencias (baseline ").append(result.getBaselineStatus()).append("):</b><ul>");
+                    result.getDiffs().forEach(d -> html.append("<li>").append(esc(d)).append("</li>"));
+                    html.append("</ul></div>");
+                }
+                if (result.getCurl() != null) {
+                    html.append("<div><b>Reproducir:</b> <code>").append(esc(result.getCurl())).append("</code></div>");
+                }
+                html.append("</td></tr>\n");
+            }
         }
         
         html.append("""
@@ -333,6 +353,14 @@ public class ReportGenerator {
             </html>
             """);
         
-        return html.toString();
+        Map<String, String> meta = (Map<String, String>) data.getOrDefault("meta", Map.of());
+        StringBuilder metaHtml = new StringBuilder();
+        meta.forEach((k, v) -> metaHtml.append("<div class=\"subtitle\">").append(esc(k)).append(": ").append(esc(v)).append("</div>"));
+        return html.toString().replace("@@META@@", metaHtml.toString());
+    }
+    
+    static String esc(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
     }
 }

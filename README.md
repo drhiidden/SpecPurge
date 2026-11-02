@@ -34,7 +34,7 @@ cd specsurge
 mvn package
 
 # 2. Run
-java -jar target/openapi-test-generator-1.0.0.jar \
+java -jar target/specsurge-core-1.0.0.jar \
   --spec http://localhost:8082/v3/api-docs \
   --base-url http://localhost:8082 \
   --output ./reports
@@ -96,8 +96,34 @@ OPTIONS:
   --spec URL       OpenAPI spec URL (default: http://localhost:8082/v3/api-docs)
   --base-url URL   API base URL for testing (default: http://localhost:8082)
   --output DIR     Output directory for HTML reports (default: ./test-reports)
+  --spec URL|FILE      OpenAPI spec: URL or local file path
+  --cases FILE.yml     Declarative cases with assertions (docs/cases.md)
+  --compare-base-url   Baseline API: run the same requests and list differences
+  --bearer-env VAR     Send `Authorization: Bearer $VAR` (token read from env, never from argv)
+  --read-only          Only GET/HEAD
+  --allow-writes       Allow writes together with --bearer-env (rejected by default)
+  --allow-host HOST    Authorize a remote host (required with token or writes)
+  --include-protected  Also test endpoints that declare `security` (default: public only)
+  --include REGEX      Only paths matching the regex
+  --param K=V          Real value for path/query params and case vars (repeatable)
+  --fail-on-auth       Treat 401 as failure (403 always fails)
+  --strict             Generated mode: 404 is not a pass
+  --validate-schema    Validate 2xx responses against the OpenAPI response schema
+  --fail-on-diff       Any baseline/candidate difference fails the run
+  --format LIST        html,junit,json (default: html)
+  --max-requests N     Request cap (default 500) · --delay-ms N pause between requests
   --help           Show this help message
 ```
+
+**Authenticated read-only smoke**:
+```bash
+export API_TOKEN=...   # never on the command line
+specsurge --spec ./openapi.yml --base-url http://localhost:8080 \
+  --bearer-env API_TOKEN --read-only --include-protected --fail-on-auth \
+  --include '/orders' --param orderId=123
+```
+
+**Cases, schema validation and baseline diff**: see [docs/cases.md](docs/cases.md).
 
 **Ejemplos**:
 ```bash
@@ -105,7 +131,7 @@ OPTIONS:
 specsurge
 
 # Test staging
-specsurge --spec https://staging.api.com/v3/api-docs --base-url https://staging.api.com
+specsurge --spec https://staging.api.com/v3/api-docs --base-url https://staging.api.com --read-only --allow-host staging.api.com
 
 # Custom output
 specsurge --output /tmp/reports/$(date +%Y%m%d)

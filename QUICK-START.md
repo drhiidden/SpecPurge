@@ -17,7 +17,7 @@ mvn package
 # Example: SampleShop backend at http://localhost:8082
 
 # 4. Run SpecSurge
-java -jar target/openapi-test-generator-1.0.0.jar
+java -jar target/specsurge-core-1.0.0.jar
 
 # 5. View report
 open test-reports/test-report-*.html

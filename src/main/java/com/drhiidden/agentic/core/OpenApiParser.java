@@ -54,36 +54,37 @@ public class OpenApiParser {
         
         List<EndpointInfo> endpoints = new ArrayList<>();
         
+        boolean globalSecurity = openApi.getSecurity() != null && !openApi.getSecurity().isEmpty();
         openApi.getPaths().forEach((path, pathItem) -> {
-            endpoints.addAll(extractOperations(path, pathItem));
+            endpoints.addAll(extractOperations(path, pathItem, globalSecurity));
         });
         
         return new ApiSpec(title, version, endpoints);
     }
     
-    private List<EndpointInfo> extractOperations(String path, PathItem pathItem) {
+    private List<EndpointInfo> extractOperations(String path, PathItem pathItem, boolean globalSecurity) {
         List<EndpointInfo> ops = new ArrayList<>();
         
         if (pathItem.getGet() != null) {
-            ops.add(extractOperation("GET", path, pathItem.getGet()));
+            ops.add(extractOperation("GET", path, pathItem.getGet(), globalSecurity));
         }
         if (pathItem.getPost() != null) {
-            ops.add(extractOperation("POST", path, pathItem.getPost()));
+            ops.add(extractOperation("POST", path, pathItem.getPost(), globalSecurity));
         }
         if (pathItem.getPut() != null) {
-            ops.add(extractOperation("PUT", path, pathItem.getPut()));
+            ops.add(extractOperation("PUT", path, pathItem.getPut(), globalSecurity));
         }
         if (pathItem.getPatch() != null) {
-            ops.add(extractOperation("PATCH", path, pathItem.getPatch()));
+            ops.add(extractOperation("PATCH", path, pathItem.getPatch(), globalSecurity));
         }
         if (pathItem.getDelete() != null) {
-            ops.add(extractOperation("DELETE", path, pathItem.getDelete()));
+            ops.add(extractOperation("DELETE", path, pathItem.getDelete(), globalSecurity));
         }
         
         return ops;
     }
     
-    private EndpointInfo extractOperation(String method, String path, Operation operation) {
+    private EndpointInfo extractOperation(String method, String path, Operation operation, boolean globalSecurity) {
         String operationId = operation.getOperationId();
         String summary = operation.getSummary();
         List<String> tags = operation.getTags();
@@ -112,7 +113,12 @@ public class OpenApiParser {
         }
         
         // Security requirements
-        boolean requiresAuth = operation.getSecurity() != null && !operation.getSecurity().isEmpty();
+        // Herencia OpenAPI: sin 'security' en la operación se hereda el global; una lista vacía la deja pública.
+        boolean requiresAuth = operation.getSecurity() != null
+            ? !operation.getSecurity().isEmpty()
+            : globalSecurity;
+        
+        Schema<?> responseSchema = extractResponseSchema(operation);
         
         return EndpointInfo.builder()
             .method(method)
@@ -124,7 +130,20 @@ public class OpenApiParser {
             .queryParams(queryParams)
             .requestSchema(requestSchema)
             .requiresAuth(requiresAuth)
+            .responseSchema(responseSchema)
             .build();
+    }
+    
+    private Schema<?> extractResponseSchema(Operation operation) {
+        if (operation.getResponses() == null) return null;
+        return operation.getResponses().entrySet().stream()
+            .filter(e -> e.getKey().startsWith("2"))
+            .map(Map.Entry::getValue)
+            .filter(r -> r.getContent() != null && r.getContent().get("application/json") != null)
+            .map(r -> r.getContent().get("application/json").getSchema())
+            .filter(java.util.Objects::nonNull)
+            .findFirst()
+            .orElse(null);
     }
     
     private Object extractDefaultValue(Schema<?> schema) {

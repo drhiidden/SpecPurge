@@ -37,3 +37,4 @@ TASK_COMPLETION*.md
 .env
 .env.*
 !.env.example
+dependency-reduced-pom.xml

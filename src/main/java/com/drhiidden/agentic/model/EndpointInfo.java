@@ -24,6 +24,8 @@ public class EndpointInfo {
     
     private Schema<?> requestSchema;
     private boolean requiresAuth;
+    /** Esquema de la primera respuesta 2xx application/json (puede ser null). */
+    private Schema<?> responseSchema;
     
     public String getFullPath() {
         String fullPath = path;
